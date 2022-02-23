@@ -66,7 +66,7 @@ class MainWindow(Qtwid.QWidget):
         elif name in ('-', '+', '*', '/'):
             self.temp_numb.append(self.text)
             # проверка на то, что уже записано в темп и замена знака
-            if self.temp_numb[-1].isnumeric():
+            if self.temp_numb[-1].isnumeric() or '.' in self.temp_numb[-1]:
                 self.temp_numb.append(name)
             elif self.temp_numb[-2] in ('-', '+', '*', '/'):
                 self.temp_numb[-2] = name
@@ -81,8 +81,8 @@ class MainWindow(Qtwid.QWidget):
         numbers = []
         operations = []
         for i in range(len(self.temp_numb)):
-            if self.temp_numb[i].isnumeric():
-                numbers.append(int(self.temp_numb[i]))
+            if self.temp_numb[i].isnumeric() or '.' in self.temp_numb[i]:
+                numbers.append(float(self.temp_numb[i]))
             else:
                 operations.append(self.temp_numb[i])
         accum = numbers.pop(0)
