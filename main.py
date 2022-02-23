@@ -19,6 +19,8 @@ class MainWindow(Qtwid.QWidget):
 
         # textfield
         self.field = Qtwid.QLineEdit('0')
+        # self.field.setEnabled(False)
+        self.field.setReadOnly(True)
         container.layout().addWidget(self.field, 0, 0, 1, 4)
 
         # buttons
@@ -30,7 +32,7 @@ class MainWindow(Qtwid.QWidget):
                  '0', '', '+', '', ]
 
         positions = [(i, j) for i in range(6) for j in range(4)]
-
+        # создание сетки кнопок
         for position, name in zip(positions, names):
             if name == '':
                 continue
@@ -42,8 +44,16 @@ class MainWindow(Qtwid.QWidget):
                 button = Qtwid.QPushButton(name)
                 button.clicked.connect(partial(self.display_field, name))
                 container.layout().addWidget(button, *position)
-        self.layout().addWidget(container)
+        self.layout().addWidget(container)  # отображение кнопок контейнера
 
+    def show_error(self):
+        dialog = Qtwid.QMessageBox()
+        dialog.setStyle(Qtwid.QStyleFactory.create('Fusion'))
+        dialog.setWindowTitle('Error')
+        dialog.setText('Делить на ноль нельзя!\nРезультат будет обнулён')
+        dialog.exec()
+
+    # триггеры для каждой из кнопок
     def display_field(self, name):
         if name == 'Clear':
             self.text = ''
@@ -65,6 +75,7 @@ class MainWindow(Qtwid.QWidget):
             self.text += name
             self.field.setText(self.text)
 
+    # логика вычислений + определения вычислений
     def logic(self):
         numbers = []
         operations = []
@@ -80,7 +91,11 @@ class MainWindow(Qtwid.QWidget):
             elif operations[i] == '-':
                 accum -= numbers[i]
             elif operations[i] == '/':
-                accum //= numbers[i]
+                if numbers[i] == 0:
+                    self.show_error()
+                    accum = ''
+                else:
+                    accum /= numbers[i]
             elif operations[i] == '*':
                 accum *= numbers[i]
         self.field.setText(str(accum))
