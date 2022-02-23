@@ -60,8 +60,9 @@ class MainWindow(Qtwid.QWidget):
             self.temp_numb.clear()
             self.field.setText('0')
         elif name == 'Enter':
-            self.temp_numb.append(self.text)
-            self.logic()
+            if self.text != '':
+                self.temp_numb.append(self.text)
+                self.logic()
         elif name in ('-', '+', '*', '/'):
             self.temp_numb.append(self.text)
             # проверка на то, что уже записано в темп и замена знака
